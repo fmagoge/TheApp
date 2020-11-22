@@ -71,6 +71,7 @@ public class SignInActivity extends AppCompatActivity {
                     if (task.isSuccessful() && task.getResult() != null && task.getResult().getDocuments().size()>0){
                         DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                         prefereneManager.putBoolean(Constants.KEY_IS_SIGNED_IN,true);
+                        prefereneManager.putString(Constants.KEY_USER_ID, documentSnapshot.getId());
                         prefereneManager.putString(Constants.KEY_FIRST_NAME, documentSnapshot.getString(Constants.KEY_FIRST_NAME));
                         prefereneManager.putString(Constants.KEY_LAST_NAME, documentSnapshot.getString(Constants.KEY_LAST_NAME));
                         prefereneManager.putString(Constants.KEY_EMAIL, documentSnapshot.getString(Constants.KEY_EMAIL));

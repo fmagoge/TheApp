@@ -78,6 +78,7 @@ public class SignUpActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(SignUpActivity.this, "User Inserted", Toast.LENGTH_SHORT).show();
                     prefereneManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                    prefereneManager.putString(Constants.KEY_USER_ID, documentReference.getId());
                     prefereneManager.putString(Constants.KEY_FIRST_NAME, inputFirstName.getText().toString().trim());
                     prefereneManager.putString(Constants.KEY_LAST_NAME, inputLastName.getText().toString().trim());
                     prefereneManager.putString(Constants.KEY_EMAIL, inputEmail.getText().toString().trim());

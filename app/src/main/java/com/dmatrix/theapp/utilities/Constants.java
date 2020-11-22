@@ -7,7 +7,9 @@ public class Constants {
     public static final String KEY_LAST_NAME = "last_name";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_PASSWORD = "password";
+    public static final String KEY_USER_ID = "user_id";
+    public static final String KEY_FCM_TOKEN = "fcm_token";
 
-    public static final String KEY_PREFERANCE_NAME = "theAppPreference";
+    public static final String KEY_PREFERENCE_NAME = "theAppPreference";
     public static final String KEY_IS_SIGNED_IN = "isSignedIn";
 }
