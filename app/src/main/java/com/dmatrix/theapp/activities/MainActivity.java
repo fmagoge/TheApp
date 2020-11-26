@@ -142,11 +142,10 @@ public class MainActivity extends AppCompatActivity implements UsersListener {
                     Toast.LENGTH_SHORT
             ).show();
         }else {
-            Toast.makeText(
-                    this,
-                    "Video call with "+user.firstName +" "+user.lastName ,
-                    Toast.LENGTH_SHORT
-            ).show();
+            Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
+            intent.putExtra("user", user);
+            intent.putExtra("type", "video");
+            startActivity(intent);
         }
     }
 
@@ -159,11 +158,10 @@ public class MainActivity extends AppCompatActivity implements UsersListener {
                     Toast.LENGTH_SHORT
             ).show();
         }else {
-            Toast.makeText(
-                    this,
-                    "Audio call with "+user.firstName +" "+user.lastName ,
-                    Toast.LENGTH_SHORT
-            ).show();
+            Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
+            intent.putExtra("user", user);
+            intent.putExtra("type", "audio");
+            startActivity(intent);
         }
     }
 }
