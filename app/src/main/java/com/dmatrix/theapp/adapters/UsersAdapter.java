@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dmatrix.theapp.R;
+import com.dmatrix.theapp.listeners.UsersListener;
 import com.dmatrix.theapp.models.User;
 
 import java.util.List;
@@ -17,9 +18,11 @@ import java.util.List;
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder>{
 
     private List<User>users;
+    private static UsersListener usersListener;//TODO - should listener be static???
 
-    public UsersAdapter(List<User> users) {
+    public UsersAdapter(List<User> users, UsersListener usersListener ) {
         this.users = users;
+        this.usersListener = usersListener;
     }
 
     @NonNull
@@ -63,6 +66,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
             textFirstChar.setText(user.firstName.substring(0,1));
             textUserName.setText(String.format("%s %s", user.firstName, user.lastName));
             textEmail.setText(user.email);
+            imageAudioCall.setOnClickListener(view -> usersListener.initiateAudioCall(user));
+            imageVideoCall.setOnClickListener(view -> usersListener.initiateVideoCall(user));
         }
     }
 }

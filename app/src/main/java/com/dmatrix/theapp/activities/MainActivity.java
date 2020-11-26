@@ -3,15 +3,16 @@ package com.dmatrix.theapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.dmatrix.theapp.R;
 import com.dmatrix.theapp.adapters.UsersAdapter;
+import com.dmatrix.theapp.listeners.UsersListener;
 import com.dmatrix.theapp.models.User;
 import com.dmatrix.theapp.utilities.Constants;
 import com.dmatrix.theapp.utilities.PrefereneManager;
@@ -25,13 +26,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UsersListener {
 
     private PrefereneManager prefereneManager;
     private List<User> users;
     private UsersAdapter usersAdapter;
     private TextView textErrorMessage;
-    private ProgressBar usersProgressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,24 +58,27 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView usersRecyclerView = findViewById(R.id.userRecyclerView);
         textErrorMessage = findViewById(R.id.textErrorMessage);
-        usersProgressBar = findViewById(R.id.usersProgressBar);
 
         users = new ArrayList<>();
-        usersAdapter = new UsersAdapter(users);
+        usersAdapter = new UsersAdapter(users, this);
         usersRecyclerView.setAdapter(usersAdapter);
+
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this::getUsers);
 
         getUsers();
     }
 
     private void getUsers(){
-        usersProgressBar.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setRefreshing(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USES)
                 .get()
                 .addOnCompleteListener(task -> {
-                    usersProgressBar.setVisibility(View.GONE);
+                    swipeRefreshLayout.setRefreshing(false);
                     String myUserId = prefereneManager.getString(Constants.KEY_USER_ID);
                     if (task.isSuccessful() && task.getResult() != null){
+                        users.clear();
                         for(QueryDocumentSnapshot documentSnapshot: task.getResult()){
                             if(myUserId.equals(documentSnapshot.getId())){
                                 continue; //So as to skip current user
@@ -127,5 +131,39 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                 })
                 .addOnFailureListener(e -> Toast.makeText(MainActivity.this, "Unable to sign out",Toast.LENGTH_SHORT).show());
+    }
+
+    @Override
+    public void initiateVideoCall(User user) {
+        if(user.token == null || user.token.trim().isEmpty()){
+            Toast.makeText(
+                    this,
+                    user.firstName +" "+user.lastName +" is not available for a video call",
+                    Toast.LENGTH_SHORT
+            ).show();
+        }else {
+            Toast.makeText(
+                    this,
+                    "Video call with "+user.firstName +" "+user.lastName ,
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
+    }
+
+    @Override
+    public void initiateAudioCall(User user) {
+        if(user.token == null || user.token.trim().isEmpty()){
+            Toast.makeText(
+                    this,
+                    user.firstName +" "+user.lastName +" is not available for an audio call",
+                    Toast.LENGTH_SHORT
+            ).show();
+        }else {
+            Toast.makeText(
+                    this,
+                    "Audio call with "+user.firstName +" "+user.lastName ,
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
     }
 }
