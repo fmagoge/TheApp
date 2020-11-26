@@ -43,6 +43,7 @@
             android:id="@+id/textFirstChar"
             android:layout_width="@dimen/_60sdp"
             android:layout_height="@dimen/_60sdp"
+            android:gravity="center"
             android:background="@drawable/background_call_invitation_user_icon"
             android:textColor="@color/black"
             android:textSize="@dimen/_30sdp"/>

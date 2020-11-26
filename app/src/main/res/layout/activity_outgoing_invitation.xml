@@ -45,6 +45,7 @@
             android:layout_height="@dimen/_60sdp"
             android:background="@drawable/background_call_invitation_user_icon"
             android:textColor="@color/black"
+            android:gravity="center"
             android:textSize="@dimen/_30sdp"/>
 
         <TextView
