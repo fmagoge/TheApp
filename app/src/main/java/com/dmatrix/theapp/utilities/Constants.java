@@ -1,5 +1,7 @@
 package com.dmatrix.theapp.utilities;
 
+import java.util.HashMap;
+
 public class Constants {
 
     public static final String KEY_COLLECTION_USES = "users";
@@ -12,4 +14,26 @@ public class Constants {
 
     public static final String KEY_PREFERENCE_NAME = "theAppPreference";
     public static final String KEY_IS_SIGNED_IN = "isSignedIn";
+
+    public static final String REMOTE_MSG_AUTHORIZATION = "Authorization";
+    public static final String REMOTE_MSG_CONTENT_TYPE = "Content-Type";
+
+    public static final String REMOTE_MSG_TYPE = "type";
+    public static final String REMOTE_MSG_INVITATION = "invitation";
+    public static final String REMOTE_MSG_MEETING_TYPE = "meetingType";
+    public static final String REMOTE_MSG_INVITER_TOKEN = "inviterToken";
+    public static final String REMOTE_MSG_DATA = "data";
+    public static final String REMOTE_MSG_REGISTRATION_IDS = "registration_ids";
+
+
+    public static HashMap<String, String> getRemoteMessageHeaders(){
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put(
+                Constants.REMOTE_MSG_AUTHORIZATION,
+                "key=AAAAc1Q4Wxw:APA91bFV1GM0Bz7VZ0QmLB-srlTjP1BR-PbGXRND6bAqQRKkAe-ksK8a9SiGu1kgAvmPGWDN70OL-Ir9IwMkfDm3MtoKLrgiJnboWxWus9d0-JVq_3Sq_WiItnxAdofeP6aTLD4o8qpt"
+        );
+        headers.put(Constants.REMOTE_MSG_CONTENT_TYPE, "application/json");
+        return headers;
+    }
+
 }

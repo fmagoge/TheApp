@@ -15,7 +15,7 @@ import com.dmatrix.theapp.adapters.UsersAdapter;
 import com.dmatrix.theapp.listeners.UsersListener;
 import com.dmatrix.theapp.models.User;
 import com.dmatrix.theapp.utilities.Constants;
-import com.dmatrix.theapp.utilities.PrefereneManager;
+import com.dmatrix.theapp.utilities.PreferenceManager;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,7 +28,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements UsersListener {
 
-    private PrefereneManager prefereneManager;
+    private PreferenceManager preferenceManager;
     private List<User> users;
     private UsersAdapter usersAdapter;
     private TextView textErrorMessage;
@@ -39,13 +39,13 @@ public class MainActivity extends AppCompatActivity implements UsersListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        prefereneManager = new PrefereneManager(getApplicationContext());
+        preferenceManager = new PreferenceManager(getApplicationContext());
 
         TextView textTitle = findViewById(R.id.textTitle);
         textTitle.setText(String.format(
                 "%s %s",
-                prefereneManager.getString(Constants.KEY_FIRST_NAME),
-                prefereneManager.getString(Constants.KEY_LAST_NAME)
+                preferenceManager.getString(Constants.KEY_FIRST_NAME),
+                preferenceManager.getString(Constants.KEY_LAST_NAME)
         ));
 
         findViewById(R.id.textSignOut).setOnClickListener(view -> signOut());
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements UsersListener {
                 .get()
                 .addOnCompleteListener(task -> {
                     swipeRefreshLayout.setRefreshing(false);
-                    String myUserId = prefereneManager.getString(Constants.KEY_USER_ID);
+                    String myUserId = preferenceManager.getString(Constants.KEY_USER_ID);
                     if (task.isSuccessful() && task.getResult() != null){
                         users.clear();
                         for(QueryDocumentSnapshot documentSnapshot: task.getResult()){
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements UsersListener {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         DocumentReference documentReference =
                 database.collection(Constants.KEY_COLLECTION_USES).document(
-                        prefereneManager.getString(Constants.KEY_USER_ID)
+                        preferenceManager.getString(Constants.KEY_USER_ID)
                 );
         documentReference.update(Constants.KEY_FCM_TOKEN, token)
                 .addOnFailureListener(e -> Toast.makeText(MainActivity.this, "Unable to send token: "+e.getMessage(),Toast.LENGTH_SHORT).show());
@@ -120,13 +120,13 @@ public class MainActivity extends AppCompatActivity implements UsersListener {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         DocumentReference documentReference =
                 database.collection(Constants.KEY_COLLECTION_USES).document(
-                        prefereneManager.getString(Constants.KEY_USER_ID)
+                        preferenceManager.getString(Constants.KEY_USER_ID)
                 );
         HashMap<String, Object> updates = new HashMap<>();
         updates.put(Constants.KEY_FCM_TOKEN, FieldValue.delete());
         documentReference.update(updates)
                 .addOnSuccessListener(aVoid -> {
-                    prefereneManager.clearPreferences();
+                    preferenceManager.clearPreferences();
                     startActivity(new Intent(getApplicationContext(), SignInActivity.class));
                     finish();
                 })

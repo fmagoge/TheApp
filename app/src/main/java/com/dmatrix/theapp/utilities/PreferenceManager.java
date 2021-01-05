@@ -3,11 +3,11 @@ package com.dmatrix.theapp.utilities;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class PrefereneManager {
+public class PreferenceManager {
 
     private SharedPreferences sharedPreferences;
 
-    public PrefereneManager(Context context) {
+    public PreferenceManager(Context context) {
         this.sharedPreferences = context.getSharedPreferences(Constants.KEY_PREFERENCE_NAME, Context.MODE_PRIVATE);
     }
 

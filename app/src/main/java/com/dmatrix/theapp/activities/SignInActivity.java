@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.dmatrix.theapp.R;
 import com.dmatrix.theapp.utilities.Constants;
-import com.dmatrix.theapp.utilities.PrefereneManager;
+import com.dmatrix.theapp.utilities.PreferenceManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,16 +23,16 @@ public class SignInActivity extends AppCompatActivity {
     private EditText  inputEmail, inputPassword;
     private MaterialButton buttonSignIn;
     private ProgressBar signInProgressBar;
-    private PrefereneManager prefereneManager;
+    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        prefereneManager = new PrefereneManager(getApplicationContext());
+        preferenceManager = new PreferenceManager(getApplicationContext());
 
-        if (prefereneManager.getBoolean(Constants.KEY_IS_SIGNED_IN)){
+        if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)){
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
             startActivity(intent);
@@ -70,11 +70,11 @@ public class SignInActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null && task.getResult().getDocuments().size()>0){
                         DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-                        prefereneManager.putBoolean(Constants.KEY_IS_SIGNED_IN,true);
-                        prefereneManager.putString(Constants.KEY_USER_ID, documentSnapshot.getId());
-                        prefereneManager.putString(Constants.KEY_FIRST_NAME, documentSnapshot.getString(Constants.KEY_FIRST_NAME));
-                        prefereneManager.putString(Constants.KEY_LAST_NAME, documentSnapshot.getString(Constants.KEY_LAST_NAME));
-                        prefereneManager.putString(Constants.KEY_EMAIL, documentSnapshot.getString(Constants.KEY_EMAIL));
+                        preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN,true);
+                        preferenceManager.putString(Constants.KEY_USER_ID, documentSnapshot.getId());
+                        preferenceManager.putString(Constants.KEY_FIRST_NAME, documentSnapshot.getString(Constants.KEY_FIRST_NAME));
+                        preferenceManager.putString(Constants.KEY_LAST_NAME, documentSnapshot.getString(Constants.KEY_LAST_NAME));
+                        preferenceManager.putString(Constants.KEY_EMAIL, documentSnapshot.getString(Constants.KEY_EMAIL));
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
                         startActivity(intent);
@@ -82,6 +82,7 @@ public class SignInActivity extends AppCompatActivity {
                         signInProgressBar.setVisibility(View.INVISIBLE);
                         buttonSignIn.setVisibility(View.VISIBLE);
                         Toast.makeText(SignInActivity.this, "Unable to signin", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(SignInActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.dmatrix.theapp.R;
 import com.dmatrix.theapp.utilities.Constants;
-import com.dmatrix.theapp.utilities.PrefereneManager;
+import com.dmatrix.theapp.utilities.PreferenceManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -23,14 +23,14 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText inputFirstName, inputLastName, inputEmail, inputPassword, inputConfirmPassword;
     private MaterialButton buttonSignup;
     private ProgressBar signUpProgressBar;
-    private PrefereneManager prefereneManager;
+    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        prefereneManager = new PrefereneManager(getApplicationContext());
+        preferenceManager = new PreferenceManager(getApplicationContext());
         findViewById(R.id.imageBack).setOnClickListener(view -> onBackPressed());
         findViewById(R.id.textSignIn).setOnClickListener(view -> onBackPressed());
 
@@ -77,11 +77,11 @@ public class SignUpActivity extends AppCompatActivity {
                 .add(user)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(SignUpActivity.this, "User Inserted", Toast.LENGTH_SHORT).show();
-                    prefereneManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
-                    prefereneManager.putString(Constants.KEY_USER_ID, documentReference.getId());
-                    prefereneManager.putString(Constants.KEY_FIRST_NAME, inputFirstName.getText().toString().trim());
-                    prefereneManager.putString(Constants.KEY_LAST_NAME, inputLastName.getText().toString().trim());
-                    prefereneManager.putString(Constants.KEY_EMAIL, inputEmail.getText().toString().trim());
+                    preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                    preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
+                    preferenceManager.putString(Constants.KEY_FIRST_NAME, inputFirstName.getText().toString().trim());
+                    preferenceManager.putString(Constants.KEY_LAST_NAME, inputLastName.getText().toString().trim());
+                    preferenceManager.putString(Constants.KEY_EMAIL, inputEmail.getText().toString().trim());
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
                     startActivity(intent);
