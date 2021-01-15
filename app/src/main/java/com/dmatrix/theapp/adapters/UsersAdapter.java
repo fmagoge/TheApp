@@ -7,22 +7,30 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dmatrix.theapp.R;
 import com.dmatrix.theapp.listeners.UsersListener;
 import com.dmatrix.theapp.models.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder>{
 
     private List<User>users;
     private static UsersListener usersListener;//TODO - should listener be static???
+    private static List<User> selectedUsers;
 
     public UsersAdapter(List<User> users, UsersListener usersListener ) {
         this.users = users;
         this.usersListener = usersListener;
+        selectedUsers = new ArrayList<>();
+    }
+
+    public List<User> getSelectedUsers(){
+        return  selectedUsers;
     }
 
     @NonNull
@@ -52,6 +60,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
 
         TextView textFirstChar, textUserName, textEmail;
         ImageView imageAudioCall, imageVideoCall;
+        ConstraintLayout userContainer;
+        ImageView imageSelected;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,6 +70,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
             textEmail = itemView.findViewById(R.id.textEmail);
             imageAudioCall = itemView.findViewById(R.id.imageAudioCall);
             imageVideoCall = itemView.findViewById(R.id.imageVideoCall);
+            userContainer = itemView.findViewById(R.id.userContainer);
+            imageSelected = itemView.findViewById(R.id.imageSelected);
         }
 
         void setUserData(User user){
@@ -68,6 +80,36 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
             textEmail.setText(user.email);
             imageAudioCall.setOnClickListener(view -> usersListener.initiateAudioCall(user));
             imageVideoCall.setOnClickListener(view -> usersListener.initiateVideoCall(user));
+
+            userContainer.setOnLongClickListener(view -> {
+                if (imageSelected.getVisibility() != View.VISIBLE){
+                    selectedUsers.add(user);
+                    imageSelected.setVisibility(View.VISIBLE);
+                    imageVideoCall.setVisibility(View.GONE);
+                    imageAudioCall.setVisibility(View.GONE);
+                    usersListener.onMultipleUsersAction(true);
+                }
+                return true;
+            });
+
+            userContainer.setOnClickListener(view -> {
+                if (imageSelected.getVisibility() == View.VISIBLE){
+                    selectedUsers.remove(user);
+                    imageSelected.setVisibility(View.GONE);
+                    imageVideoCall.setVisibility(View.VISIBLE);
+                    imageAudioCall.setVisibility(View.VISIBLE);
+                    if (selectedUsers.size() == 0){
+                        usersListener.onMultipleUsersAction(false);
+                    }
+                }else{
+                    if (selectedUsers.size() > 0){
+                        selectedUsers.add(user);
+                        imageSelected.setVisibility(View.VISIBLE);
+                        imageVideoCall.setVisibility(View.GONE);
+                        imageAudioCall.setVisibility(View.GONE);
+                    }
+                }
+            });
         }
     }
 }
