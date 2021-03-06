@@ -4,7 +4,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,10 +41,17 @@ public class IncomingInvitationActivity extends AppCompatActivity {
 
     private String meetingType = null;
 
+    String firstName, lastName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incoming_invitation);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON|
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
         ImageView imageMeetingType = findViewById(R.id.imageCallType);
         meetingType = getIntent().getStringExtra(Constants.REMOTE_MSG_MEETING_TYPE);
@@ -53,7 +68,8 @@ public class IncomingInvitationActivity extends AppCompatActivity {
         TextView textUsername = findViewById(R.id.textUsername);
         TextView textEmail = findViewById(R.id.textEmail);
 
-        String firstName = getIntent().getStringExtra(Constants.KEY_FIRST_NAME);
+        firstName = getIntent().getStringExtra(Constants.KEY_FIRST_NAME);
+        lastName = getIntent().getStringExtra(Constants.KEY_LAST_NAME);
         if (firstName != null){
             textFirstChar.setText(firstName.substring(0,1));
         }
@@ -61,22 +77,45 @@ public class IncomingInvitationActivity extends AppCompatActivity {
         textUsername.setText(String.format(
                 "%s %s",
                 firstName,
-                getIntent().getStringExtra(Constants.KEY_LAST_NAME)
+                lastName
         ));
 
        textEmail.setText(getIntent().getStringExtra(Constants.KEY_EMAIL));
 
+        Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        Ringtone ringtoneSound = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
+
+        if (ringtoneSound != null) {
+            ringtoneSound.play();
+        }
+
        ImageView imageAcceptInvitation = findViewById(R.id.imageAcceptCall);
-       imageAcceptInvitation.setOnClickListener(view -> sendInvitationResponse(
-               Constants.REMOTE_MSG_INVITATION_ACCEPTED,
-               getIntent().getStringExtra(Constants.REMOTE_MSG_INVITER_TOKEN)
-       ));
+       imageAcceptInvitation.setOnClickListener(view -> {
+           sendInvitationResponse(
+                   Constants.REMOTE_MSG_INVITATION_ACCEPTED,
+                   getIntent().getStringExtra(Constants.REMOTE_MSG_INVITER_TOKEN)
+           );
+           ringtoneSound.stop();
+       });
+
+        Handler handler=new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent=new Intent(IncomingInvitationActivity.this,MainActivity.class);
+                ringtoneSound.stop();
+                startActivity(intent);
+                finish();
+            }
+        },60000);
 
         ImageView imageRejectInvitation = findViewById(R.id.imageRejectCall);
-        imageRejectInvitation.setOnClickListener(view -> sendInvitationResponse(
+        imageRejectInvitation.setOnClickListener(view -> {sendInvitationResponse(
                 Constants.REMOTE_MSG_INVITATION_REJECTED,
-                getIntent().getStringExtra(Constants.REMOTE_MSG_INVITER_TOKEN)
-        ));
+                getIntent().getStringExtra(Constants.REMOTE_MSG_INVITER_TOKEN));
+                ringtoneSound.stop();
+                finish();
+        });
     }
 
     private void sendInvitationResponse(String type, String receiverToken){
@@ -116,6 +155,11 @@ public class IncomingInvitationActivity extends AppCompatActivity {
                             builder.setServerURL(serverURL);
                             builder.setWelcomePageEnabled(false);
                             builder.setRoom(getIntent().getStringExtra(Constants.REMOTE_MSG_MEETING_ROOM));
+                            builder.setSubject(String.format(
+                                    "%s %s",
+                                    firstName,
+                                    lastName
+                            ));
                             if (meetingType.equals("audio")){
                                 builder.setVideoMuted(true);
                             }
@@ -127,11 +171,13 @@ public class IncomingInvitationActivity extends AppCompatActivity {
                         }
                     }else {
                         Toast.makeText(IncomingInvitationActivity.this,"Invitation Rejected ", Toast.LENGTH_SHORT).show();
-                        finish();
+                        //finish();
+                        goToMain();
                     }
                 }else{
                     Toast.makeText(IncomingInvitationActivity.this,"Fail to get response: "+ response.message(), Toast.LENGTH_SHORT).show();
-                    finish();
+                    //finish();
+                    goToMain();
                 }
 
             }
@@ -172,6 +218,10 @@ public class IncomingInvitationActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(
                 invitationResponseReceiver
         );
+    }
+
+    private void goToMain(){
+        startActivity(new Intent(this, MainActivity.class));
     }
 
 }

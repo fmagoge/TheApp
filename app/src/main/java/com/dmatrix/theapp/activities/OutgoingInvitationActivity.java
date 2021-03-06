@@ -51,6 +51,7 @@ public class OutgoingInvitationActivity extends AppCompatActivity {
 
     private int rejectionCount = 0;
     private int totalReceivers = 0;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,7 @@ public class OutgoingInvitationActivity extends AppCompatActivity {
         textUsername = findViewById(R.id.textUsername);
         textEmail = findViewById(R.id.textEmail);
 
-        User user = (User) getIntent().getSerializableExtra("user");
+        user = (User) getIntent().getSerializableExtra("user");
         if(user != null){
             textFirstChar.setText(user.firstName.substring(0,1));
             textUsername.setText(String.format("%s %s", user.firstName, user.lastName));
@@ -236,6 +237,11 @@ public class OutgoingInvitationActivity extends AppCompatActivity {
                         builder.setServerURL(serverURL);
                         builder.setWelcomePageEnabled(false);
                         builder.setRoom(meetingRoom);
+                        builder.setSubject(String.format(
+                                "%s %s",
+                                user.firstName,
+                                user.lastName
+                        ));
                         if (meetingType.equals("audio")){
                             builder.setVideoMuted(true);
                         }

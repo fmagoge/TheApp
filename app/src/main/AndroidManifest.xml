@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.dmatrix.theapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,10 +16,13 @@
         android:theme="@style/Theme.TheApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".activities.OutgoingInvitationActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.IncomingInvitationActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.MessageActivity"></activity>
+        <activity
+            android:name=".activities.OutgoingInvitationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.IncomingInvitationActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SignInActivity"
             android:screenOrientation="portrait"
@@ -43,7 +50,5 @@
             </intent-filter>
         </service>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
