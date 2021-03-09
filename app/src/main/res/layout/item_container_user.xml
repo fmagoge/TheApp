@@ -55,6 +55,19 @@
         app:tint="@android:color/holo_blue_dark" />
 
     <ImageView
+        android:id="@+id/imageChat"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:contentDescription="@string/app_name"
+        android:padding="@dimen/_4sdp"
+        android:src="@drawable/ic_chat"
+        app:layout_constraintBottom_toTopOf="@+id/viewDivider"
+        app:layout_constraintEnd_toStartOf="@id/imageAudioCall"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@android:color/holo_blue_dark" />
+
+    <ImageView
         android:id="@+id/imageAudioCall"
         android:layout_width="@dimen/_30sdp"
         android:layout_height="@dimen/_30sdp"
@@ -78,7 +91,7 @@
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="@dimen/_13sdp"
         app:layout_constraintBottom_toTopOf="@+id/viewSupporter"
-        app:layout_constraintEnd_toStartOf="@+id/imageAudioCall"
+        app:layout_constraintEnd_toStartOf="@+id/imageChat"
         app:layout_constraintStart_toEndOf="@+id/textFirstChar"
         />
 
@@ -93,7 +106,7 @@
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="@dimen/_10sdp"
         app:layout_constraintTop_toBottomOf="@+id/viewSupporter"
-        app:layout_constraintEnd_toStartOf="@+id/imageAudioCall"
+        app:layout_constraintEnd_toStartOf="@+id/imageChat"
         app:layout_constraintStart_toEndOf="@+id/textFirstChar"
         />
 

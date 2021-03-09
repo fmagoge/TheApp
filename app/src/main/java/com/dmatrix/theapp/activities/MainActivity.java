@@ -179,6 +179,22 @@ public class MainActivity extends AppCompatActivity implements UsersListener {
     }
 
     @Override
+    public void initiateChat(User user) {
+        if(user.token == null || user.token.trim().isEmpty()){
+            Toast.makeText(
+                    this,
+                    user.firstName +" "+user.lastName +" is not available for a chat",
+                    Toast.LENGTH_SHORT
+            ).show();
+        }else {
+            Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+            intent.putExtra("user", user);
+            intent.putExtra("type", "chat");
+            startActivity(intent);
+        }
+    }
+
+    @Override
     public void onMultipleUsersAction(Boolean isMultipleUsersSelected) {
         if (isMultipleUsersSelected){
             imageConference.setVisibility(View.VISIBLE);

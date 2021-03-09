@@ -8,5 +8,7 @@ public interface UsersListener {
 
     void initiateAudioCall(User user);
 
+    void initiateChat(User user);
+
     void onMultipleUsersAction(Boolean isMultipleUsersSelected);
 }

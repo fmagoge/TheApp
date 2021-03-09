@@ -59,7 +59,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
     static class UserViewHolder extends RecyclerView.ViewHolder{
 
         TextView textFirstChar, textUserName, textEmail;
-        ImageView imageAudioCall, imageVideoCall;
+        ImageView imageAudioCall, imageVideoCall, imageChat;
         ConstraintLayout userContainer;
         ImageView imageSelected;
 
@@ -70,6 +70,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
             textEmail = itemView.findViewById(R.id.textEmail);
             imageAudioCall = itemView.findViewById(R.id.imageAudioCall);
             imageVideoCall = itemView.findViewById(R.id.imageVideoCall);
+            imageChat  = itemView.findViewById(R.id.imageChat);
             userContainer = itemView.findViewById(R.id.userContainer);
             imageSelected = itemView.findViewById(R.id.imageSelected);
         }
@@ -80,6 +81,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
             textEmail.setText(user.email);
             imageAudioCall.setOnClickListener(view -> usersListener.initiateAudioCall(user));
             imageVideoCall.setOnClickListener(view -> usersListener.initiateVideoCall(user));
+            imageChat.setOnClickListener(v -> usersListener.initiateChat(user));
 
             userContainer.setOnLongClickListener(view -> {
                 if (imageSelected.getVisibility() != View.VISIBLE){
@@ -98,6 +100,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
                     imageSelected.setVisibility(View.GONE);
                     imageVideoCall.setVisibility(View.VISIBLE);
                     imageAudioCall.setVisibility(View.VISIBLE);
+                    imageChat.setVisibility(View.VISIBLE);
                     if (selectedUsers.size() == 0){
                         usersListener.onMultipleUsersAction(false);
                     }
@@ -107,6 +110,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
                         imageSelected.setVisibility(View.VISIBLE);
                         imageVideoCall.setVisibility(View.GONE);
                         imageAudioCall.setVisibility(View.GONE);
+                        imageChat.setVisibility(View.GONE);
                     }
                 }
             });
